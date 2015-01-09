@@ -25,9 +25,13 @@ if SHOULD_RUN
   assets do
     serve '/scripts', from: 'assets/scripts'
     serve '/styles',  from: 'assets/styles'
+    serve '/images',  from: 'assets/images'
+    serve '/styles/images',  from: 'assets/images'
 
     css :application, '/styles/application.css', [
-      '/styles/layout.css'
+      '/styles/layout.css',
+      '/styles/index.css',
+      '/styles/components.css',
     ]
   end
 

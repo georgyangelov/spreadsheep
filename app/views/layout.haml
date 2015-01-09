@@ -6,4 +6,14 @@
     != css :application
 
   %body
-    = yield
+    .container
+      %header
+        #menu
+          %button.btn Register
+          %button.btn Login
+        %h1 SpreadSheep
+
+      %content
+        = yield
+
+      %footer

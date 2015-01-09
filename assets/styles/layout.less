@@ -1,3 +1,43 @@
+@import url('http://fonts.googleapis.com/css?family=Roboto:400italic,300,700,400&subset=cyrillic,cyrillic-ext,latin');
+
 body {
     margin: 0;
+
+    font-family: 'Roboto', sans-serif;
+}
+
+.container {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+header {
+    padding: 20px 0;
+
+    h1 {
+        display: inline-block;
+
+        line-height: 80px;
+        padding-left: 90px;
+
+        margin: 0;
+
+        font-size: 30px;
+
+        // Image taken from http://icons8.com
+        background-image: url('images/sheep-100.png');
+        background-repeat: no-repeat;
+        background-position: left center;
+        background-size: auto 100%;
+    }
+
+    #menu {
+        float: right;
+        line-height: 80px;
+
+        > * {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
 }

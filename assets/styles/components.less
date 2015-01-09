@@ -1,0 +1,27 @@
+*:focus {
+    outline: 0;
+}
+
+.btn {
+    background: none;
+    border: 1px solid transparent;
+
+    padding: 10px;
+
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+
+    transition: border-color .5s, background-color .1s, color .1s;
+
+    cursor: pointer;
+
+    &:hover {
+        border: 1px solid black;
+        border-radius: 3px;
+    }
+
+    &:active {
+        background-color: black;
+        color: white;
+    }
+}
