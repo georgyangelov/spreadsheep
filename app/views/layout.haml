@@ -12,8 +12,11 @@
     .container
       %header
         #menu
-          %a.btn{href: '/auth/register'} Register
-          %a.btn{href: '/auth/login'} Login
+          - if user_logged_in?
+            %a.btn{href: '/auth/logout'} Logout
+          - else
+            %a.btn{href: '/auth/register'} Register
+            %a.btn{href: '/auth/login'} Login
         %a{href: '/'}
           %h1 SpreadSheep
 

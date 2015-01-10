@@ -1,0 +1,18 @@
+%h1.center{class: (:error if flash[:login_error])}
+  - if flash[:login_error]
+    = flash[:login_error]
+  - else
+    Welcome back!
+
+%form#login-form.center-condensed{action: 'login', method: 'post'}
+  .group.input-with-icon
+    %i.fa.fa-at
+    %input{type: 'email', name: 'email', placeholder: 'Email', required: true}
+  .group.input-with-icon
+    %i.fa.fa-lock
+    %input#password{type: 'password', name: 'password', placeholder: 'Password', required: true}
+  .group.center
+    %button.btn.big{type: 'submit'} Let me in!
+
+:javascript
+  $('#login-form').validate();

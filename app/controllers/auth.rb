@@ -13,4 +13,28 @@ namespace '/auth' do
     flash[:notice] = 'You have registered successfully!'
     redirect to '/home'
   end
+
+  get '/login' do
+    haml :'auth/login'
+  end
+
+  post '/login' do
+    user = User.find_by(email: params['email']).try(:authenticate, params['password'])
+
+    if user
+      login user
+
+      redirect to '/home'
+    else
+      flash[:login_error] = 'Invalid email or password.'
+
+      redirect to '/auth/login'
+    end
+  end
+
+  get '/logout' do
+    logout
+
+    redirect to '/'
+  end
 end
