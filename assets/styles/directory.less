@@ -1,0 +1,41 @@
+table.directory {
+    border-collapse: collapse;
+
+    th {
+        font-weight: normal;
+        border-bottom: 1px solid black;
+    }
+
+    td {
+        height: 50px;
+        font-weight: 300;
+
+        i {
+            padding-right: 8px;
+        }
+    }
+
+    td:first-child {
+        font-weight: 500;
+    }
+
+    th, td {
+        padding: 0 10px;
+        text-align: left;
+    }
+
+    tbody tr {
+        border-bottom: 1px solid transparent;
+        transition: border-color .5s;
+
+        &:hover {
+            border-color: black;
+        }
+    }
+
+    &.center-condensed {
+        width: 800px;
+        margin: 0 auto;
+        margin-top: 50px;
+    }
+}

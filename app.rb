@@ -37,6 +37,7 @@ if SHOULD_RUN
       '/styles/layout.css',
       '/styles/index.css',
       '/styles/components.css',
+      '/styles/directory.css',
     ]
   end
 

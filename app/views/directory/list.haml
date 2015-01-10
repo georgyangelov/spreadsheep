@@ -1,0 +1,34 @@
+%table.directory.center-condensed
+  %thead
+    %tr
+      %th Name
+      %th Last modified
+      %th Settings
+
+  %tbody
+    %tr.directory.back
+      %td
+        %a{href: '/directory/list/0/parent-directory'}
+          %i.fa.fa-reply
+          Parent directory
+      %td
+      %td
+
+    - 5.times do
+      %tr.directory
+        %td
+          %a{href: '/directory/list/1/random-name'}
+            %i.fa.fa-folder-o
+            Random directory name
+        %td --
+        %td
+          %button.btn Delete
+
+    - 9.times do
+      %tr.sheet
+        %td
+          %i.fa.fa-file-excel-o
+          Random sheet name
+        %td About 10 minutes ago
+        %td
+          %button.btn Delete

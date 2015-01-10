@@ -11,7 +11,7 @@ namespace '/auth' do
     user.save!
 
     flash[:notice] = 'You have registered successfully!'
-    redirect to '/home'
+    redirect to '/'
   end
 
   get '/login' do
@@ -24,7 +24,7 @@ namespace '/auth' do
     if user
       login user
 
-      redirect to '/home'
+      redirect to '/'
     else
       flash[:login_error] = 'Invalid email or password.'
 

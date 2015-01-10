@@ -17,6 +17,10 @@ module Sinatra
     def user_logged_in?
       !!current_user
     end
+
+    def require_user_login!
+      halt haml :error unless user_logged_in?
+    end
   end
 
   helpers Authentication
