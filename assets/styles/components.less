@@ -3,6 +3,7 @@
 }
 
 .btn {
+    color: black;
     background: none;
     border: 1px solid transparent;
 
@@ -24,4 +25,72 @@
         background-color: black;
         color: white;
     }
+
+    &.big {
+        font-size: 30px;
+    }
+}
+
+.input-with-icon {
+    position: relative;
+
+    i {
+        position: absolute;
+        top: 10px;
+        left: 13px;
+    }
+
+    input {
+        width: 100%;
+        height: 100%;
+
+        padding: 10px 10px 10px 60px;
+    }
+}
+
+form {
+    .fa {
+        font-size: 40px;
+        width: 40px;
+        line-height: 40px;
+
+        text-align: center;
+    }
+
+    .group + .group {
+        margin-top: 15px;
+    }
+
+    input {
+        box-sizing: border-box;
+
+        font-size: 30px;
+        font-weight: 300;
+
+        font-family: 'Roboto', sans-serif;
+
+        border: 1px solid transparent;
+        border-radius: 3px;
+
+        transition: border-color .5s;
+
+        &:hover, &:focus {
+            border-color: black;
+        }
+    }
+
+    &.center-condensed {
+        width: 500px;
+        margin: 0 auto;
+    }
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+.error {
+    color: red;
+    border-color: red;
 }

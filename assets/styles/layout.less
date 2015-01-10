@@ -12,7 +12,7 @@ body {
 }
 
 header {
-    padding: 20px 0;
+    padding: 20px 0 0 0;
 
     h1 {
         display: inline-block;
@@ -38,6 +38,18 @@ header {
         > * {
             display: inline-block;
             vertical-align: middle;
+            line-height: 100%;
         }
+    }
+}
+
+content {
+    > h1.center {
+        margin-bottom: 60px;
+    }
+
+    .notice {
+        text-align: center;
+        font-size: 20px;
     }
 }

@@ -3,9 +3,9 @@ source 'https://rubygems.org'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'sinatra-activerecord'
+gem 'rack-flash3'
 gem 'bcrypt'
 
-gem 'shotgun'
 gem 'thin'
 
 gem 'therubyracer' # Required by less

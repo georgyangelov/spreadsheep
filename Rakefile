@@ -3,7 +3,7 @@ require 'sinatra/activerecord/rake'
 require_relative 'app'
 
 task :run do
-  exec 'rerun -d . -p "**/*.{rb,yml}" -- ruby app.rb'
+  exec 'rerun --no-growl -d . -p "**/*.{rb,yml}" -- ruby app.rb'
 end
 
 task :console do

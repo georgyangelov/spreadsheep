@@ -223,6 +223,8 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     rack (1.6.0)
+    rack-flash3 (1.0.5)
+      rack
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
@@ -234,8 +236,6 @@ GEM
     ref (1.0.5)
     rerun (0.10.0)
       listen (~> 2.7, >= 2.7.3)
-    shotgun (0.9)
-      rack (>= 1.0)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -283,9 +283,9 @@ DEPENDENCIES
   haml
   less
   pry
+  rack-flash3
   rake
   rerun
-  shotgun
   sinatra
   sinatra-activerecord
   sinatra-assetpack
