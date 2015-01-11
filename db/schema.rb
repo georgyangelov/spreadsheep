@@ -14,10 +14,12 @@
 ActiveRecord::Schema.define(version: 20150110193040) do
 
   create_table "directories", force: :cascade do |t|
-    t.string  "name"
-    t.string  "slug"
-    t.integer "user_id"
-    t.integer "parent_id"
+    t.string   "name"
+    t.string   "slug"
+    t.integer  "user_id"
+    t.integer  "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "directories", ["parent_id"], name: "index_directories_on_parent_id"

@@ -8,6 +8,7 @@ require 'rack-flash'
 require 'json'
 require 'less'
 require 'haml'
+require 'rack/csrf'
 
 Dir["#{__dir__}/app/helpers/*.rb"].each { |file| require_relative file }
 Dir["#{__dir__}/app/filters/*.rb"].each { |file| require_relative file }
@@ -38,6 +39,10 @@ if SHOULD_RUN
       '/styles/index.css',
       '/styles/components.css',
       '/styles/directory.css',
+    ]
+
+    js :application, '/scripts/application.js', [
+      '/scripts/helpers.js'
     ]
   end
 

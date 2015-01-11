@@ -6,6 +6,8 @@ class CreateDirectories < ActiveRecord::Migration
 
       t.belongs_to :user
       t.integer :parent_id, null: true, default: nil, index: true
+
+      t.timestamps null: false
     end
 
     create_table :directories_users, id: false do |t|

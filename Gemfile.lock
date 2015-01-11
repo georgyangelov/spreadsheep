@@ -229,6 +229,8 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    rack_csrf (2.5.0)
+      rack (>= 1.1.0)
     rake (10.4.2)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
@@ -284,6 +286,7 @@ DEPENDENCIES
   less
   pry
   rack-flash3
+  rack_csrf
   rake
   rerun
   sinatra

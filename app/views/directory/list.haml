@@ -6,29 +6,33 @@
       %th Settings
 
   %tbody
-    %tr.directory.back
-      %td
-        %a{href: '/directory/list/0/parent-directory'}
-          %i.fa.fa-reply
-          Parent directory
-      %td
-      %td
 
-    - 5.times do
+    - unless @directory.root?
+      %tr.directory.back
+        %td
+          %a{href: "/directory/#{@directory.parent.id}/#{@directory.parent.slug}"}
+            %i.fa.fa-reply
+            Parent directory
+        %td
+        %td
+
+    - @directory.directories.each do |subdir|
       %tr.directory
         %td
-          %a{href: '/directory/list/1/random-name'}
+          %a{href: "/directory/#{subdir.id}/#{subdir.slug}"}
             %i.fa.fa-folder-o
-            Random directory name
-        %td --
+            = subdir.name
         %td
-          %button.btn Delete
+          = subdir.updated_at
+        %td
+          - if subdir.user_id == current_user.id
+            != post_button 'Delete', "/directory/delete/#{subdir.id}", confirm: 'Are you really really sure you want to delete this directory?'
 
-    - 9.times do
-      %tr.sheet
-        %td
-          %i.fa.fa-file-excel-o
-          Random sheet name
-        %td About 10 minutes ago
-        %td
-          %button.btn Delete
+    / - 9.times do
+    /   %tr.sheet
+    /     %td
+    /       %i.fa.fa-file-excel-o
+    /       Random sheet name
+    /     %td About 10 minutes ago
+    /     %td
+    /       %button.btn Delete
