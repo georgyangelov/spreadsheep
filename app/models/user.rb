@@ -6,9 +6,14 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  has_and_belongs_to_many :directories
+  has_many :user_shares
+
+  has_many :shared_directories,
+           class_name: :Directory,
+           through: :user_shares,
+           source: :directory
 
   def root_directory
-    Directory.find_or_create_by! user: self, parent: nil, name: '$root'
+    Directory.find_or_create_by! creator: self, parent: nil, name: '$root'
   end
 end

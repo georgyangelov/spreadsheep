@@ -1,6 +1,7 @@
 SHOULD_RUN = $0 == __FILE__
 
 require 'sinatra'
+require 'sinatra/json'
 require 'sinatra/assetpack'
 require 'sinatra/namespace' if SHOULD_RUN
 require 'sinatra/activerecord'
@@ -39,6 +40,7 @@ if SHOULD_RUN
       '/styles/index.css',
       '/styles/components.css',
       '/styles/directory.css',
+      '/styles/selectize.css',
     ]
 
     js :application, '/scripts/application.js', [

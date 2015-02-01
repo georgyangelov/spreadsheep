@@ -1,0 +1,51 @@
+%h1.center{class: (:error if flash[:error])}
+  - if flash[:error]
+    = flash[:error]
+  - else
+    Tell me more about it!
+
+%form#directory-creation-form.center-condensed{method: 'post'}
+  .group.input-with-icon
+    %i.fa.fa-folder-o
+    %input{type: 'text', name: 'name', placeholder: 'Directory name', required: true}
+  .group.input-with-icon
+    %i.fa.fa-share-alt
+    %input#user-share-input{type: 'text', name: 'shares', placeholder: 'Share or keep private'}
+  .group.center
+    %button.btn.big{type: 'submit'} Create!
+
+:javascript
+  $('#directory-creation-form').validate();
+
+  $('#user-share-input').selectize({
+    plugins: ['remove_button'],
+    delimiter: ',',
+    create: false,
+    valueField: 'email',
+    labelField: 'full_name',
+    searchField: ['full_name', 'email'],
+    render: {
+      option: function(user, escape) {
+        return '<div>' +
+          '<span class="label">' + escape(user.full_name) + '</span>' +
+          '<span class="caption">' + escape(user.email) + '</span>' +
+        '</div>';
+      }
+    },
+    load: function(query, next) {
+      if (query.length < 3) {
+        return next();
+      }
+
+      $.ajax({
+        url: '/user/search/' + encodeURIComponent(query),
+        type: 'GET',
+        error: function() {
+          next();
+        },
+        success: function(users) {
+          next(users);
+        }
+      });
+    }
+  });

@@ -1,38 +1,42 @@
-%table.directory.center-condensed
-  %thead
-    %tr
-      %th Name
-      %th Last modified
-      %th Settings
+%div.center-condensed
+  %div.controls
+    %a.btn{href: "/directory/create/#{@directory.id}"} New directory
 
-  %tbody
+  %table.directory
+    %thead
+      %tr
+        %th Name
+        %th Last modified
+        %th Settings
 
-    - unless @directory.root?
-      %tr.directory.back
-        %td
-          %a{href: "/directory/#{@directory.parent.id}/#{@directory.parent.slug}"}
-            %i.fa.fa-reply
-            Parent directory
-        %td
-        %td
+    %tbody
 
-    - @directory.directories.each do |subdir|
-      %tr.directory
-        %td
-          %a{href: "/directory/#{subdir.id}/#{subdir.slug}"}
-            %i.fa.fa-folder-o
-            = subdir.name
-        %td
-          = subdir.updated_at
-        %td
-          - if subdir.user_id == current_user.id
-            != post_button 'Delete', "/directory/delete/#{subdir.id}", confirm: 'Are you really really sure you want to delete this directory?'
+      - unless @directory.root?
+        %tr.directory.back
+          %td
+            %a{href: @directory.parent.root? ? "/directory" : "/directory/#{@directory.parent.id}/#{@directory.parent.slug}"}
+              %i.fa.fa-reply
+              Parent directory
+          %td
+          %td
 
-    / - 9.times do
-    /   %tr.sheet
-    /     %td
-    /       %i.fa.fa-file-excel-o
-    /       Random sheet name
-    /     %td About 10 minutes ago
-    /     %td
-    /       %button.btn Delete
+      - @directory.directories.each do |subdir|
+        %tr.directory
+          %td
+            %a{href: "/directory/#{subdir.id}/#{subdir.slug}"}
+              %i.fa.fa-folder-o
+              = subdir.name
+          %td
+            = subdir.updated_at
+          %td
+            - if subdir.creator_id == current_user.id
+              != post_button 'Delete', "/directory/delete/#{subdir.id}", confirm: 'Are you really really sure you want to delete this directory?'
+
+      / - 9.times do
+      /   %tr.sheet
+      /     %td
+      /       %i.fa.fa-file-excel-o
+      /       Random sheet name
+      /     %td About 10 minutes ago
+      /     %td
+      /       %button.btn Delete

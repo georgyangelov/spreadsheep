@@ -1,14 +1,19 @@
 class Directory < ActiveRecord::Base
   validates_presence_of :name
 
-  belongs_to :user
+  belongs_to :creator, foreign_key: :creator_id, class_name: :User
   belongs_to :parent, class_name: :Directory
 
   has_many :directories, foreign_key: :parent_id,
                          inverse_of: :parent,
                          dependent: :destroy
 
-  has_and_belongs_to_many :users
+  has_many :user_shares
+
+  has_many :allowed_users,
+           class_name: :User,
+           through: :user_shares,
+           source: :user
 
   before_create :generate_slug
 

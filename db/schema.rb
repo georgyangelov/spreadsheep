@@ -16,17 +16,20 @@ ActiveRecord::Schema.define(version: 20150110193040) do
   create_table "directories", force: :cascade do |t|
     t.string   "name"
     t.string   "slug"
-    t.integer  "user_id"
+    t.integer  "creator_id", null: false
     t.integer  "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  add_index "directories", ["creator_id"], name: "index_directories_on_creator_id"
   add_index "directories", ["parent_id"], name: "index_directories_on_parent_id"
 
-  create_table "directories_users", id: false, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "directory_id"
+  create_table "user_shares", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "directory_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "users", force: :cascade do |t|
