@@ -52,8 +52,8 @@ namespace '/directory' do
 
   get '/:id/*' do |id, _|
     @directory = Directory.find(id)
-    p @directory
-    raise Sinatra::NotFound unless @directory and @directory.allowed_users.include? current_user
+
+    ensure_user_access_to @directory
 
     haml :'directory/list'
   end

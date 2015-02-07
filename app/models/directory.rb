@@ -15,10 +15,16 @@ class Directory < ActiveRecord::Base
            through: :user_shares,
            source: :user
 
+  has_many :sheets
+
   before_create :generate_slug
 
   def root?
     !parent
+  end
+
+  def has_access?(user)
+    creator == user or allowed_users.include? user
   end
 
   private

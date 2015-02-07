@@ -1,0 +1,15 @@
+%h1.center{class: (:error if flash[:error])}
+  - if flash[:error]
+    = flash[:error]
+  - else
+    What should we call it?
+
+%form#sheet-creation-form.center-condensed{method: 'post'}
+  .group.input-with-icon
+    %i.fa.fa-table
+    %input{type: 'text', name: 'name', placeholder: 'Sheet name', required: true}
+  .group.center
+    %button.btn.big{type: 'submit'} Create!
+
+:javascript
+  $('#sheet-creation-form').validate();
