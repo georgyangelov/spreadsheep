@@ -34,6 +34,9 @@ if SHOULD_RUN
     serve '/fonts',   from: 'assets/fonts'
     serve '/styles/images',  from: 'assets/images'
 
+    css :sheet_view, '/styles/sheet_view.css', [
+      '/styles/fullscreen.css'
+    ]
     css :application, '/styles/application.css', [
       '/styles/font-awesome.min.css',
       '/styles/layout.css',
@@ -43,6 +46,9 @@ if SHOULD_RUN
       '/styles/selectize.css',
     ]
 
+    js :sheet_view, '/scripts/sheet_view.js', [
+      '/scripts/sheet.js'
+    ]
     js :application, '/scripts/application.js', [
       '/scripts/helpers.js'
     ]

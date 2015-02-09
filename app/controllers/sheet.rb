@@ -1,6 +1,14 @@
 namespace '/sheet' do
   before { require_user_login! }
 
+  get '/:id' do |id|
+    @sheet = Sheet.find id
+
+    ensure_user_access_to @sheet
+
+    haml :'sheet/view', layout: :fullscreen
+  end
+
   get '/create/:directory_id' do |directory_id|
     @directory = Directory.find directory_id
     ensure_user_access_to @directory
