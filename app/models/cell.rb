@@ -3,6 +3,10 @@ class Cell < ActiveRecord::Base
 
   validates_presence_of :row, :column, :content
 
+  def as_json(options={})
+    super(only: [:row, :column, :content])
+  end
+
   class << self
     # Changes is [{row: <row>, column: <column>, value: <value>}, ...]
     def update_cells_for_sheet(sheet_id, changes)

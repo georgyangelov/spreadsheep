@@ -4,7 +4,7 @@ class Sheet < ActiveRecord::Base
 
   validates_presence_of :name
 
-  has_many :sheets
+  has_many :cells
 
   def has_access?(user)
     self.user == user or directory.has_access? user

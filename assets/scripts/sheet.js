@@ -9,7 +9,7 @@ window.jQuery(function($) {
             // stretchH: 'all',
             minSpareRows: 1,
             colHeaders: true,
-            contextMenu: true,
+            contextMenu: false,
 
             manualColumnResize: true,
             manualRowResize: true
@@ -24,8 +24,21 @@ window.jQuery(function($) {
 
     socket.connect();
 
+    // Load initial data
+    $.get('/sheet/' + window.state.sheet_id + '/cells').then(function(cells) {
+        cells = _.map(cells, function(cell) {
+            return [cell.row, cell.column, cell.content];
+        });
+
+        table.setDataAtCell(cells, 'automatic');
+    });
+
     // Handsontable event handlers
-    table.addHook('afterChange', function(changes) {
+    table.addHook('afterChange', function(changes, source) {
+        if (source === 'automatic') {
+            return;
+        }
+
         changes = _.map(changes, function(change) {
             return {
                 row: change[0],
