@@ -10,6 +10,7 @@
 
     %script{src: '//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'}
     %script{src: '//cdnjs.cloudflare.com/ajax/libs/handsontable/0.12.5/handsontable.full.min.js'}
+    %script{src: '//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.1.0/lodash.min.js'}
 
     != js :application
     != js :sheet_view
@@ -21,4 +22,4 @@
       #menu
         %a.btn{href: "/directory/#{@sheet.directory.id}/#{@sheet.directory.slug}"} Back
 
-    #table
+    = yield

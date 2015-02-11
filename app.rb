@@ -5,6 +5,7 @@ require 'sinatra/json'
 require 'sinatra/assetpack'
 require 'sinatra/namespace' if SHOULD_RUN
 require 'sinatra/activerecord'
+require 'sinatra-websocket'
 require 'rack-flash'
 require 'json'
 require 'less'
@@ -47,6 +48,7 @@ if SHOULD_RUN
     ]
 
     js :sheet_view, '/scripts/sheet_view.js', [
+      '/scripts/socket.js',
       '/scripts/sheet.js'
     ]
     js :application, '/scripts/application.js', [

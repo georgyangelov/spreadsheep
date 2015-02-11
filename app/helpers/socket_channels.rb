@@ -26,10 +26,6 @@ class SocketChannels
         @channels[channel] << socket
       end
 
-      socket.onmessage do |message|
-        # Not needed currently...
-      end
-
       socket.onclose do
         @channels[channel].delete socket
         @channels.delete channel if @channels[channel].empty?
@@ -42,7 +38,7 @@ module Sinatra
   module SocketChannels
     @@socket_channels = ::SocketChannels.new
 
-    def socket(path, channel=path)
+    def socket(path, channel=path, &block)
       get path do
         if channel.respond_to? :call
           channel_name = instance_eval(&channel)
@@ -51,7 +47,7 @@ module Sinatra
         end
 
         @@socket_channels.new_connection(request, channel_name) do |socket|
-          yield socket if block_given?
+          instance_exec(socket, &block) if block_given?
         end
       end
     end

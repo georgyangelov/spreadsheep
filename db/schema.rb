@@ -11,9 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150207163112) do
+ActiveRecord::Schema.define(version: 20150211162733) do
 
-  create_table "cells", id: false, force: :cascade do |t|
+  create_table "cells", force: :cascade do |t|
     t.integer "sheet_id"
     t.integer "row",      null: false
     t.integer "column",   null: false
