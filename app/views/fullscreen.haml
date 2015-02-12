@@ -11,6 +11,10 @@
     %script{src: '//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'}
     %script{src: '//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.1.0/lodash.min.js'}
     %script{src: '//cdnjs.cloudflare.com/ajax/libs/pleasejs/0.2.0/Please.min.js'}
+    %script{src: '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js'}
+    %script{src: '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js'}
+
+    %script{src: '/scripts/react_components/user_list.jsx', type: 'text/jsx'}
 
     != js :application
     != js :sheet_view
@@ -21,5 +25,10 @@
         = @sheet.name
       #menu
         %a.btn{href: "/directory/#{@sheet.directory.id}/#{@sheet.directory.slug}"} Back
+      #user-list
 
     = yield
+
+  %script{type: 'text/jsx'}
+    :plain
+      initialize_sheet();

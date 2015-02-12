@@ -1,4 +1,4 @@
-window.jQuery(function($) {
+window.initialize_sheet = function() {
     'use strict';
 
     window.HandsontablePlugins.RemoteSelections.register();
@@ -45,6 +45,12 @@ window.jQuery(function($) {
         });
     }
 
+    // Initialize the user list component
+    var user_list = React.render(
+        React.createElement(UserList, null),
+        document.getElementById('user-list')
+    );
+
     // WebSocket initialization
     var socket = new JSONSocket('ws://' + window.location.host + '/socket/sheet/' + window.state.sheet_id);
 
@@ -62,11 +68,13 @@ window.jQuery(function($) {
     });
 
     socket.on('message', function(message) {
-        console.log('got message', message);
         if (message.type === 'cell_changes') {
             table.setDataAtCell(cell_objects_to_array(message.changes), 'automatic');
         } else if (message.type === 'new_user') {
-            table.remote_selections.add(message.socket_id, randomColor());
+            var color = randomColor();
+
+            table.remote_selections.add(message.socket_id, color);
+            user_list.add(message.socket_id, message.user.full_name, color);
 
             if (message.selection) {
                 table.remote_selections.move(
@@ -79,6 +87,7 @@ window.jQuery(function($) {
             }
         } else if (message.type === 'remove_user') {
             table.remote_selections.remove(message.socket_id);
+            user_list.remove(message.socket_id);
         } else if (message.type === 'selection_change') {
             table.remote_selections.move(
                 message.socket_id,
@@ -136,4 +145,4 @@ window.jQuery(function($) {
             }
         });
     });
-});
+};

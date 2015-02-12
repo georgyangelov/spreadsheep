@@ -26,6 +26,23 @@ if SHOULD_RUN
   set :root,          File.dirname(__FILE__)
   set :views,         proc { File.join(root, 'app', 'views') }
 
+  # Add jsx as a supported format
+  module Sinatra::AssetPack
+    class << self
+      alias_method :original_supported_formats, :supported_formats
+
+      def supported_formats
+        original_supported_formats
+
+        @supported_formats |= ['jsx']
+      end
+    end
+  end
+
+  configure do
+    mime_type :jsx, 'text/jsx'
+  end
+
   register Sinatra::AssetPack
 
   assets do
