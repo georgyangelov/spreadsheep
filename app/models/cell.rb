@@ -8,7 +8,7 @@ class Cell < ActiveRecord::Base
   end
 
   class << self
-    # Changes is [{row: <row>, column: <column>, value: <value>}, ...]
+    # Changes is [{row: <row>, column: <column>, content: <content>}, ...]
     def update_cells_for_sheet(sheet_id, changes)
       changes.each do |change|
         query = {
@@ -17,16 +17,16 @@ class Cell < ActiveRecord::Base
           column:   change[:column]
         }
 
-        if change[:value].nil? or change[:value] == ''
+        if change[:content].nil? or change[:content] == ''
           Cell.destroy_all(query)
         else
           cell = Cell.find_by(query)
 
           if cell
-            cell.content = change[:value]
+            cell.content = change[:content]
             cell.save
           else
-            Cell.create(query.merge(content: change[:value]))
+            Cell.create(query.merge(content: change[:content]))
           end
         end
       end

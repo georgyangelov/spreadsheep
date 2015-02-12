@@ -48,6 +48,9 @@ if SHOULD_RUN
     ]
 
     js :sheet_view, '/scripts/sheet_view.js', [
+      '/scripts/libs/handsontable_full_modified.js',
+      '/scripts/handsontable_plugins/remote_selections.js',
+
       '/scripts/socket.js',
       '/scripts/sheet.js'
     ]
