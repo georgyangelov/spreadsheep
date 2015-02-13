@@ -45,6 +45,16 @@ socket '/socket/sheet/:id', proc { "sheet/#{params[:id]}" } do |socket|
       broadcast channel_id, message.to_json, exclude: socket
 
       Cell.update_cells_for_sheet(sheet_id, message[:changes])
+    when 'row_column_resize'
+      broadcast channel_id, message.to_json, exclude: socket
+
+      state = RowColumnState.find_or_create_by(
+        sheet_id: sheet_id,
+        index:    message[:index],
+        type:     RowColumnState.types[message[:row_column_type]]
+      )
+      state.width = message[:width]
+      state.save
     when 'selection_change'
       message[:user_id] = socket.state[:user][:id]
       message[:socket_id] = socket_id

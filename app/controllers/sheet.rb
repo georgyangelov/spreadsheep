@@ -9,12 +9,16 @@ namespace '/sheet' do
     haml :'sheet/view', layout: :fullscreen
   end
 
-  get '/:id/cells' do |id|
+  get '/:id/data' do |id|
     @sheet = Sheet.find id
 
     ensure_user_access_to @sheet
 
-    json @sheet.cells
+    json({
+      row_sizes: @sheet.row_sizes,
+      column_sizes: @sheet.column_sizes,
+      cells: @sheet.cells
+    })
   end
 
   get '/create/:directory_id' do |directory_id|

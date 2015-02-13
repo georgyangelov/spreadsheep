@@ -4,6 +4,8 @@ window.initialize_sheet = function() {
     window.HandsontablePlugins.RemoteSelections.register();
 
     var container = document.getElementById('table'),
+        row_sizes = [],
+        column_sizes = [],
         table = new Handsontable(container, {
             startRows: 100,
             startCols: 37,
@@ -96,14 +98,33 @@ window.initialize_sheet = function() {
                 message.end.row,
                 message.end.column
             );
+        } else if (message.type === 'row_column_resize') {
+            if (message.row_column_type === 'row') {
+                row_sizes[message.index] = message.width;
+            } else {
+                column_sizes[message.index] = message.width;
+            }
+
+            table.updateSettings({
+                manualRowResize: row_sizes,
+                manualColumnResize: column_sizes
+            });
         }
     });
 
     socket.connect();
 
     // Load initial data
-    $.get('/sheet/' + window.state.sheet_id + '/cells').then(function(cells) {
-        table.setDataAtCell(cell_objects_to_array(cells), 'automatic');
+    $.get('/sheet/' + window.state.sheet_id + '/data').then(function(data) {
+        table.setDataAtCell(cell_objects_to_array(data.cells), 'automatic');
+
+        row_sizes = data.row_sizes;
+        column_sizes = data.column_sizes;
+
+        table.updateSettings({
+            manualRowResize: row_sizes,
+            manualColumnResize: column_sizes
+        });
     });
 
     // Handsontable event handlers
@@ -143,6 +164,28 @@ window.initialize_sheet = function() {
                 row: null,
                 column: null
             }
+        });
+    });
+
+    table.addHook('afterRowResize', function(row, size) {
+        row_sizes[row] = size;
+
+        socket.send({
+            type: 'row_column_resize',
+            row_column_type: 'row',
+            index: row,
+            width: size
+        });
+    });
+
+    table.addHook('afterColumnResize', function(column, size) {
+        column_sizes[column] = size;
+
+        socket.send({
+            type: 'row_column_resize',
+            row_column_type: 'column',
+            index: column,
+            width: size
         });
     });
 };

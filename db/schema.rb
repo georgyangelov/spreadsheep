@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150211162733) do
+ActiveRecord::Schema.define(version: 20150213182145) do
 
   create_table "cells", force: :cascade do |t|
     t.integer "sheet_id"
@@ -34,6 +34,15 @@ ActiveRecord::Schema.define(version: 20150211162733) do
 
   add_index "directories", ["creator_id"], name: "index_directories_on_creator_id"
   add_index "directories", ["parent_id"], name: "index_directories_on_parent_id"
+
+  create_table "row_column_states", force: :cascade do |t|
+    t.integer "sheet_id"
+    t.integer "index"
+    t.integer "type"
+    t.integer "width"
+  end
+
+  add_index "row_column_states", ["sheet_id", "type", "index"], name: "index_row_column_states_on_sheet_id_and_type_and_index", unique: true
 
   create_table "sheets", force: :cascade do |t|
     t.integer  "directory_id"

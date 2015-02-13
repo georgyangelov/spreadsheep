@@ -23,8 +23,8 @@ if SHOULD_RUN
 
   set :bind, '0.0.0.0'
   set :port, 8080
-  set :root,          File.dirname(__FILE__)
-  set :views,         proc { File.join(root, 'app', 'views') }
+  set :root,  File.dirname(__FILE__)
+  set :views, proc { File.join(root, 'app', 'views') }
 
   # Add jsx as a supported format
   module Sinatra::AssetPack
@@ -46,11 +46,11 @@ if SHOULD_RUN
   register Sinatra::AssetPack
 
   assets do
-    serve '/scripts', from: 'assets/scripts'
-    serve '/styles',  from: 'assets/styles'
-    serve '/images',  from: 'assets/images'
-    serve '/fonts',   from: 'assets/fonts'
-    serve '/styles/images',  from: 'assets/images'
+    serve '/scripts',       from: 'assets/scripts'
+    serve '/styles',        from: 'assets/styles'
+    serve '/images',        from: 'assets/images'
+    serve '/fonts',         from: 'assets/fonts'
+    serve '/styles/images', from: 'assets/images'
 
     css :sheet_view, '/styles/sheet_view.css', [
       '/styles/fullscreen.css'
