@@ -1,30 +1,69 @@
 require 'digest/sha1'
 
-socket '/socket/sheet/:id', proc { "sheet/#{params[:id]}" } do |socket|
-  sheet_id  = params[:id]
-  channel_id = "sheet/#{sheet_id}"
-  socket_id = Digest::SHA1.hexdigest("#{sheet_id},#{current_user.id},#{DateTime.now},#{Random.rand}")
+class SheetLive
+  def initialize(sinatra_context, socket, current_user, sheet_id, channel_id)
+    @sinatra_context = sinatra_context
+    @socket = socket
+    @sheet_id = sheet_id
+    @channel_id = channel_id
+    @socket_id = @socket.state[:socket_id]
 
-  ensure_user_access_to Sheet.find(sheet_id)
+    @socket.state[:user] = current_user.as_json(only: [:id, :full_name, :email]).symbolize_keys
+  end
 
-  # Set socket id
-  socket.state[:user] = current_user.as_json(only: [:id, :full_name, :email]).symbolize_keys
-  socket.state[:socket_id] = socket_id
+  def after_connect
+    notify_of_existing_users
+    notify_of_new_user
+  end
 
-  socket.onopen do
-    # Send new user notification to others
-    new_user_message = {
-      type: 'new_user',
-      user: current_user.as_json(only: [:id, :full_name, :email]),
-      socket_id: socket_id,
-      selection: nil
-    }
+  def message_received(message)
+    message = JSON.parse(message, symbolize_names: true)
 
-    broadcast channel_id, new_user_message.to_json, exclude: socket
+    public_send "handle_#{message[:type]}", message
+  end
 
-    # Send notification for existing users
-    sockets_for_channel(channel_id).each do |other_user_socket|
-      next if other_user_socket == socket
+  def handle_cell_changes(message)
+    broadcast message
+
+    Cell.update_cells_for_sheet(@sheet_id, message[:changes])
+  end
+
+  def handle_row_column_resize(message)
+    broadcast message
+
+    state = RowColumnState.find_or_create_by(
+      sheet_id: @sheet_id,
+      index:    message[:index],
+      type:     RowColumnState.types[message[:row_column_type]]
+    )
+    state.width = message[:width]
+    state.save
+  end
+
+  def handle_selection_change(message)
+    message[:user_id] = @socket.state[:user][:id]
+    message[:socket_id] = @socket_id
+
+    @socket.state[:selection] = {start: message[:start], end: message[:end]}
+
+    broadcast message
+  end
+
+  def after_close
+    broadcast type: 'remove_user',
+              user: @socket.state[:user],
+              socket_id: @socket_id
+  end
+
+  private
+
+  def broadcast(message)
+    @sinatra_context.broadcast @channel_id, message.to_json, exclude: @socket
+  end
+
+  def notify_of_existing_users
+    @sinatra_context.sockets_for_channel(@channel_id).each do |other_user_socket|
+      next if other_user_socket == @socket
 
       new_user_message = {
         type: 'new_user',
@@ -33,45 +72,31 @@ socket '/socket/sheet/:id', proc { "sheet/#{params[:id]}" } do |socket|
         selection: other_user_socket.state[:selection]
       }
 
-      socket.send new_user_message.to_json
+      @socket.send new_user_message.to_json
     end
   end
 
-  socket.onmessage do |message|
-    message = JSON.parse(message, symbolize_names: true)
-
-    case message[:type]
-    when 'cell_changes'
-      broadcast channel_id, message.to_json, exclude: socket
-
-      Cell.update_cells_for_sheet(sheet_id, message[:changes])
-    when 'row_column_resize'
-      broadcast channel_id, message.to_json, exclude: socket
-
-      state = RowColumnState.find_or_create_by(
-        sheet_id: sheet_id,
-        index:    message[:index],
-        type:     RowColumnState.types[message[:row_column_type]]
-      )
-      state.width = message[:width]
-      state.save
-    when 'selection_change'
-      message[:user_id] = socket.state[:user][:id]
-      message[:socket_id] = socket_id
-
-      socket.state[:selection] = {start: message[:start], end: message[:end]}
-
-      broadcast channel_id, message.to_json, exclude: socket
-    end
+  def notify_of_new_user
+    broadcast type: 'new_user',
+              user: @socket.state[:user],
+              socket_id: @socket_id,
+              selection: nil
   end
+end
 
-  socket.onclose do
-    remove_user_message = {
-      type: 'remove_user',
-      user: current_user.as_json(only: [:id, :full_name, :email]),
-      socket_id: socket_id
-    }
+socket '/socket/sheet/:id', proc { "sheet/#{params[:id]}" } do |socket|
+  sheet_id  = params[:id]
+  channel_id = "sheet/#{sheet_id}"
+  socket_id = Digest::SHA1.hexdigest("#{sheet_id},#{current_user.id},#{DateTime.now},#{Random.rand}")
 
-    broadcast channel_id, remove_user_message.to_json, exclude: socket
-  end
+  ensure_user_access_to Sheet.find(sheet_id)
+
+  # Set socket id
+  socket.state[:socket_id] = socket_id
+
+  controller = SheetLive.new(self, socket, current_user, sheet_id, channel_id)
+
+  socket.onopen    { controller.after_connect }
+  socket.onmessage { |message| controller.message_received(message) }
+  socket.onclose   { controller.after_close }
 end
