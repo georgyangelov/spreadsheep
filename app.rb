@@ -53,6 +53,8 @@ if SHOULD_RUN
     serve '/styles/images', from: 'assets/images'
 
     css :sheet_view, '/styles/sheet_view.css', [
+      '/styles/handsontable.formula.css',
+
       '/styles/fullscreen.css'
     ]
     css :application, '/styles/application.css', [
@@ -65,9 +67,16 @@ if SHOULD_RUN
     ]
 
     js :sheet_view, '/scripts/sheet_view.js', [
-      '/scripts/libs/handsontable_full_modified.js',
-      '/scripts/handsontable_plugins/remote_selections.js',
+      '/scripts/libs/handsontable_full_rulejs.js',
+      '/scripts/libs/handsontable_rulejs/md5.js',
+      '/scripts/libs/handsontable_rulejs/jstat.js',
+      '/scripts/libs/handsontable_rulejs/numeric.js',
+      '/scripts/libs/handsontable_rulejs/formula.js',
+      '/scripts/libs/handsontable_rulejs/parser.js',
+      '/scripts/libs/handsontable_rulejs/ruleJS.js',
+      '/scripts/libs/handsontable_rulejs/handsontable.formula.js',
 
+      '/scripts/handsontable_plugins/remote_selections.js',
       '/scripts/socket.js',
       '/scripts/sheet.js'
     ]

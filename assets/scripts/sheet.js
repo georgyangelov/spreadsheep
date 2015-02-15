@@ -16,7 +16,9 @@ window.initialize_sheet = function() {
             contextMenu: false,
 
             manualColumnResize: true,
-            manualRowResize: true
+            manualRowResize: true,
+
+            formulas: true
         });
 
     // DEBUG

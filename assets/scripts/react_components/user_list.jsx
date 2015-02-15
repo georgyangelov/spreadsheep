@@ -13,11 +13,11 @@ var UserList = React.createClass({
 
     renderUser: function(user) {
         var style = {
-            'background-color': user.color
+            backgroundColor: user.color
         };
 
         return (
-            <li title={user.name} style={style}>{this.getInitials(user.name)}</li>
+            <li key={user.id} title={user.name} style={style}>{this.getInitials(user.name)}</li>
         );
     },
 
