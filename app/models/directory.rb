@@ -19,6 +19,8 @@ class Directory < ActiveRecord::Base
 
   before_create :generate_slug
 
+  default_scope { includes(:user_shares) }
+
   scope :root_shares, ->(user_id) do
     joins(:user_shares).where(
       'creator_id != ? and user_shares.user_id = ? and directories.parent_id not in (select directory_id from user_shares where user_id = ?)',
@@ -29,33 +31,48 @@ class Directory < ActiveRecord::Base
   end
 
   def root?
-    !parent
+    parent_id.nil?
+  end
+
+  def shared?
+    all_allowed_user_ids.size > 1
+  end
+
+  def parent_for_user(user)
+    return if root?
+
+    path_for_user = path_to_root_for_user(user)
+
+    return user.root_directory if path_for_user.size == 1
+
+    path_for_user[-2]
+  end
+
+  def has_direct_access?(user)
+    creator_id == user.id or user_shares.any? { |share| share.user_id == user.id }
   end
 
   def has_access?(user)
-    creator == user or all_allowed_users.include? user
+    creator_id == user.id or all_allowed_user_ids.include? user.id
   end
 
-  def all_allowed_users
-    directory = self
-    users = []
-
-    until directory.nil?
-      users |= directory.allowed_users
-
-      directory = Directory.where(id: directory.parent_id).includes(:allowed_users).includes(parent: [:allowed_users]).first
-    end
-
-    users
+  def all_allowed_user_ids
+    path_to_root.flat_map(&:user_shares).map(&:user_id).uniq
   end
 
-  def path
-    "/#{path_to_root.map(&:name).join('/')}"
+  def path(user)
+    "/#{path_to_root_for_user(user).map(&:name).join('/')}"
   end
 
   private
 
+  def path_to_root_for_user(user)
+    path_to_root.drop_while { |directory| not directory.has_direct_access? user }
+  end
+
   def path_to_root
+    return @path_to_root if @path_to_root
+
     directory = self
     path = []
 
@@ -64,7 +81,7 @@ class Directory < ActiveRecord::Base
       directory = directory.parent
     end
 
-    path.reverse
+    @path_to_root = path.reverse
   end
 
   def generate_slug

@@ -3,12 +3,12 @@
     .left
       - unless @directory.root?
         %i.fa.fa-folder-o
-        - if @directory.all_allowed_users.size > 1
+        - if @directory.shared?
           - if @directory.creator_id == current_user.id
             %i.fa.fa-user-plus
           - else
             %i.fa.fa-users
-        = @directory.path
+        = @directory.path(current_user)
 
     %a.btn{href: "/sheet/create/#{@directory.id}"} New sheet
     %a.btn{href: "/directory/create/#{@directory.id}"} New directory
@@ -25,7 +25,7 @@
       - unless @directory.root?
         %tr.directory.back
           %td
-            %a{href: @directory.parent.root? ? "/directory" : "/directory/#{@directory.parent.id}/#{@directory.parent.slug}"}
+            %a{href: @parent.root? ? "/directory" : "/directory/#{@parent.id}/#{@parent.slug}"}
               %i.fa.fa-reply
               Parent directory
           %td
@@ -36,7 +36,7 @@
           %td
             %a{href: "/directory/#{subdir.id}/#{subdir.slug}"}
               %i.fa.fa-folder-o
-              - if subdir.all_allowed_users.size > 1
+              - if subdir.shared?
                 - if subdir.creator_id == current_user.id
                   %i.fa.fa-user-plus
                 - else

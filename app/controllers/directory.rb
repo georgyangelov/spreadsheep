@@ -65,6 +65,8 @@ namespace '/directory' do
 
     @directories.to_a.sort_by!(&:updated_at).reverse!
 
+    @parent = @directory.parent_for_user(current_user)
+
     haml :'directory/list'
   end
 end
