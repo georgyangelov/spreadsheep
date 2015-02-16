@@ -43,13 +43,29 @@ class Directory < ActiveRecord::Base
     until directory.nil?
       users |= directory.allowed_users
 
-      directory = Directory.where(id: directory.parent_id).includes(:allowed_users).first
+      directory = Directory.where(id: directory.parent_id).includes(:allowed_users).includes(parent: [:allowed_users]).first
     end
 
     users
   end
 
+  def path
+    "/#{path_to_root.map(&:name).join('/')}"
+  end
+
   private
+
+  def path_to_root
+    directory = self
+    path = []
+
+    until directory.root?
+      path << directory
+      directory = directory.parent
+    end
+
+    path.reverse
+  end
 
   def generate_slug
     self.slug = name.parameterize

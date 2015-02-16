@@ -1,5 +1,15 @@
 %div.center-condensed
   %div.controls
+    .left
+      - unless @directory.root?
+        %i.fa.fa-folder-o
+        - if @directory.all_allowed_users.size > 1
+          - if @directory.creator_id == current_user.id
+            %i.fa.fa-user-plus
+          - else
+            %i.fa.fa-users
+        = @directory.path
+
     %a.btn{href: "/sheet/create/#{@directory.id}"} New sheet
     %a.btn{href: "/directory/create/#{@directory.id}"} New directory
 
