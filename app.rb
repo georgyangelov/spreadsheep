@@ -49,7 +49,6 @@ if SHOULD_RUN
     serve '/scripts',       from: 'assets/scripts'
     serve '/styles',        from: 'assets/styles'
     serve '/images',        from: 'assets/images'
-    serve '/fonts',         from: 'assets/fonts'
     serve '/styles/images', from: 'assets/images'
 
     css :sheet_view, '/styles/sheet_view.css', [
