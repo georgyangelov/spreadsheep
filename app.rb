@@ -58,7 +58,6 @@ if SHOULD_RUN
       '/styles/fullscreen.css'
     ]
     css :application, '/styles/application.css', [
-      '/styles/font-awesome.min.css',
       '/styles/layout.css',
       '/styles/index.css',
       '/styles/components.css',

@@ -4,6 +4,11 @@ namespace '/directory' do
   get do
     @directory = current_user.root_directory
 
+    @directories = @directory.directories
+    @directories += Directory.root_shares(current_user.id)
+
+    @directories.sort_by!(&:updated_at).reverse!
+
     haml :'directory/list'
   end
 
@@ -54,6 +59,11 @@ namespace '/directory' do
     @directory = Directory.find(id)
 
     ensure_user_access_to @directory
+
+    @directories = @directory.directories
+    @directories += Directory.root_shares(current_user.id) if @directory.root?
+
+    @directories.to_a.sort_by!(&:updated_at).reverse!
 
     haml :'directory/list'
   end

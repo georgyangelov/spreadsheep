@@ -19,12 +19,34 @@ class Directory < ActiveRecord::Base
 
   before_create :generate_slug
 
+  scope :root_shares, ->(user_id) do
+    joins(:user_shares).where(
+      'creator_id != ? and user_shares.user_id = ? and directories.parent_id not in (select directory_id from user_shares where user_id = ?)',
+      user_id,
+      user_id,
+      user_id
+    )
+  end
+
   def root?
     !parent
   end
 
   def has_access?(user)
-    creator == user or allowed_users.include? user
+    creator == user or all_allowed_users.include? user
+  end
+
+  def all_allowed_users
+    directory = self
+    users = []
+
+    until directory.nil?
+      users |= directory.allowed_users
+
+      directory = Directory.where(id: directory.parent_id).includes(:allowed_users).first
+    end
+
+    users
   end
 
   private

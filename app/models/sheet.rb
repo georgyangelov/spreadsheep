@@ -1,5 +1,5 @@
 class Sheet < ActiveRecord::Base
-  belongs_to :directory
+  belongs_to :directory, touch: true
   belongs_to :user
 
   validates_presence_of :name
@@ -23,6 +23,9 @@ class Sheet < ActiveRecord::Base
 
   def row_column_sizes(type)
     states = row_column_states.where(type: RowColumnState.types[type])
+
+    return [] if states.empty?
+
     max_index = states.map(&:index).max
     states = states.map { |state| [state.index, state.width] }.to_h
 

@@ -21,19 +21,27 @@
           %td
           %td
 
-      - @directory.directories.each do |subdir|
+      - @directories.each do |subdir|
         %tr.directory
           %td
             %a{href: "/directory/#{subdir.id}/#{subdir.slug}"}
               %i.fa.fa-folder-o
+              - if subdir.all_allowed_users.size > 1
+                - if subdir.creator_id == current_user.id
+                  %i.fa.fa-user-plus
+                - else
+                  %i.fa.fa-users
               = subdir.name
           %td
             = subdir.updated_at
           %td
             - if subdir.creator_id == current_user.id
+              %a.btn{href: "/directory/edit/#{subdir.id}"} Edit
               != post_button 'Delete', "/directory/delete/#{subdir.id}", confirm: 'Are you really really sure you want to delete this directory?'
+            - else
+              != post_button 'Unshare', "/directory/unshare/#{subdir.id}", confirm: 'Are you really sure you want to remove the share?'
 
-      - @directory.sheets.each do |sheet|
+      - @directory.sheets.order(updated_at: :desc).each do |sheet|
         %tr.sheet
           %td
             %a{href: "/sheet/#{sheet.id}"}
@@ -42,4 +50,5 @@
           %td
             = sheet.updated_at
           %td
+            %a.btn{href: "/sheet/edit/#{sheet.id}"} Rename
             != post_button 'Delete', "/sheet/delete/#{sheet.id}", confirm: 'Are you really really sure you want to delete this sheet?'

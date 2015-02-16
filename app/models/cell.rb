@@ -1,5 +1,5 @@
 class Cell < ActiveRecord::Base
-  belongs_to :sheet
+  belongs_to :sheet, touch: true
 
   validates_presence_of :row, :column, :content
 
