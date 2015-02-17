@@ -18,12 +18,13 @@ class Directory < ActiveRecord::Base
   has_many :sheets
 
   before_create :generate_slug
+  before_save   :generate_slug
 
   default_scope { includes(:user_shares) }
 
   scope :root_shares, ->(user_id) do
-    joins(:user_shares).where(
-      'creator_id != ? and user_shares.user_id = ? and directories.parent_id not in (select directory_id from user_shares where user_id = ?)',
+    where(
+      'creator_id != ? and directories.id in (select directory_id from user_shares where user_id = ?) and directories.parent_id not in (select directory_id from user_shares where user_id = ?)',
       user_id,
       user_id,
       user_id

@@ -4,15 +4,19 @@
   - else
     Tell me more about it!
 
-%form#directory-creation-form.center-condensed{method: 'post'}
+%form#directory-creation-form.center-condensed{method: 'post', action: @directory ? "/directory/#{@directory.id}/edit" : "/directory/create/#{@parent_id}"}
   .group.input-with-icon
     %i.fa.fa-folder-o
-    %input{type: 'text', name: 'name', placeholder: 'Directory name', required: true}
+    %input{type: 'text', name: 'name', placeholder: 'Directory name', required: true, value: @directory ? @directory.name : ''}
   .group.input-with-icon
     %i.fa.fa-share-alt
-    %input#user-share-input{type: 'text', name: 'shares', placeholder: 'Share or keep private'}
+    %input#user-share-input{type: 'text', name: 'shares', placeholder: 'Share or keep private', value: @directory ? @allowed_users.map(&:email).join(',') : ''}
   .group.center
-    %button.btn.big{type: 'submit'} Create!
+    %button.btn.big{type: 'submit'}
+      - if @directory
+        Modify!
+      - else
+        Create!
 
 :javascript
   $('#directory-creation-form').validate();

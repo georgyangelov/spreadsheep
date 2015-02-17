@@ -46,10 +46,10 @@
             = subdir.updated_at
           %td
             - if subdir.creator_id == current_user.id
-              %a.btn{href: "/directory/edit/#{subdir.id}"} Edit
-              != post_button 'Delete', "/directory/delete/#{subdir.id}", confirm: 'Are you really really sure you want to delete this directory?'
+              %a.btn{href: "/directory/#{subdir.id}/edit"} Edit
+              != post_button 'Delete', "/directory/#{subdir.id}/delete", confirm: 'Are you really really sure you want to delete this directory?'
             - else
-              != post_button 'Unshare', "/directory/unshare/#{subdir.id}", confirm: 'Are you really sure you want to remove the share?'
+              != post_button 'Unshare', "/directory/#{subdir.id}/unshare", confirm: 'Are you really sure you want to remove the share?'
 
       - @directory.sheets.order(updated_at: :desc).each do |sheet|
         %tr.sheet
@@ -61,4 +61,4 @@
             = sheet.updated_at
           %td
             %a.btn{href: "/sheet/edit/#{sheet.id}"} Rename
-            != post_button 'Delete', "/sheet/delete/#{sheet.id}", confirm: 'Are you really really sure you want to delete this sheet?'
+            != post_button 'Delete', "/sheet/#{sheet.id}/delete", confirm: 'Are you really really sure you want to delete this sheet?'

@@ -39,7 +39,7 @@ namespace '/sheet' do
     redirect to "/directory/#{@directory.id}/#{@directory.slug}"
   end
 
-  post '/delete/:id' do |id|
+  post '/:id/delete' do |id|
     @sheet = Sheet.find id
     ensure_user_access_to @sheet
 
