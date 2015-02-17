@@ -4,12 +4,16 @@
   - else
     What should we call it?
 
-%form#sheet-creation-form.center-condensed{method: 'post'}
+%form#sheet-creation-form.center-condensed{method: 'post', action: @sheet ? "/sheet/#{@sheet.id}/edit" : "/sheet/create/#{@directory.id}"}
   .group.input-with-icon
     %i.fa.fa-table
-    %input{type: 'text', name: 'name', placeholder: 'Sheet name', required: true}
+    %input{type: 'text', name: 'name', placeholder: 'Sheet name', required: true, value: @sheet ? @sheet.name : ''}
   .group.center
-    %button.btn.big{type: 'submit'} Create!
+    %button.btn.big{type: 'submit'}
+      - if @sheet
+        Modify!
+      - else
+        Create!
 
 :javascript
   $('#sheet-creation-form').validate();

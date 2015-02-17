@@ -60,5 +60,5 @@
           %td
             = sheet.updated_at
           %td
-            %a.btn{href: "/sheet/edit/#{sheet.id}"} Rename
+            %a.btn{href: "/sheet/#{sheet.id}/edit"} Rename
             != post_button 'Delete', "/sheet/#{sheet.id}/delete", confirm: 'Are you really really sure you want to delete this sheet?'

@@ -49,4 +49,21 @@ namespace '/sheet' do
 
     redirect to redirect_url
   end
+
+  get '/:id/edit' do |id|
+    @sheet = Sheet.find id
+    ensure_user_access_to @sheet
+
+    haml :'sheet/create'
+  end
+
+  post '/:id/edit' do |id|
+    @sheet = Sheet.find id
+    ensure_user_access_to @sheet
+
+    @sheet.name = params['name']
+    @sheet.save!
+
+    redirect to "/directory/#{@sheet.directory.id}/#{@sheet.directory.slug}"
+  end
 end
