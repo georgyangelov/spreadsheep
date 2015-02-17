@@ -66,6 +66,7 @@ if SHOULD_RUN
 
     js :sheet_view, '/scripts/sheet_view.js', [
       '/scripts/libs/handsontable_full_modified.js',
+      '/scripts/libs/handsontable_rulejs/lodash.js',
       '/scripts/libs/handsontable_rulejs/md5.js',
       '/scripts/libs/handsontable_rulejs/jstat.js',
       '/scripts/libs/handsontable_rulejs/numeric.js',
