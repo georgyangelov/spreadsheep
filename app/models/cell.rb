@@ -3,8 +3,14 @@ class Cell < ActiveRecord::Base
 
   validates_presence_of :row, :column
 
+  enum alignment: [
+    :top_left, :top_center, :top_right,
+    :middle_left, :middle_center, :middle_right,
+    :bottom_left, :bottom_center, :bottom_right
+  ]
+
   def as_json(options={})
-    super(only: [:row, :column, :content, :background_color, :foreground_color])
+    super(only: [:row, :column, :content, :background_color, :foreground_color, :font_size, :alignment])
   end
 
   class << self
@@ -27,7 +33,9 @@ class Cell < ActiveRecord::Base
           update = {
             content:          change[:content],
             background_color: change[:background_color],
-            foreground_color: change[:foreground_color]
+            foreground_color: change[:foreground_color],
+            font_size:        change[:font_size],
+            alignment:        Cell.alignments[change[:alignment]],
           }.delete_if { |_, value| value.nil? }
 
           next if update.empty?

@@ -78,7 +78,7 @@ if SHOULD_RUN
       '/scripts/libs/handsontable_rulejs/handsontable.formula.js',
 
       '/scripts/handsontable_plugins/remote_selections.js',
-      '/scripts/handsontable_plugins/color_renderer.js',
+      '/scripts/handsontable_plugins/style_renderer.js',
       '/scripts/socket.js',
       '/scripts/sheet.js'
     ]

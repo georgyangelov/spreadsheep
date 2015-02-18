@@ -4,6 +4,7 @@
     %title SpreadSheep Alpha - the alpha sheep
 
     %link{rel: 'stylesheet', href: '//cdnjs.cloudflare.com/ajax/libs/handsontable/0.12.5/handsontable.full.min.css'}
+    %link{rel: 'stylesheet', href: '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css'}
 
     != css :application
     != css :sheet_view
@@ -20,6 +21,8 @@
 
     %script{src: '/scripts/react_components/user_list.jsx', type: 'text/jsx'}
     %script{src: '/scripts/react_components/color_picker.jsx', type: 'text/jsx'}
+    %script{src: '/scripts/react_components/font_size_picker.jsx', type: 'text/jsx'}
+    %script{src: '/scripts/react_components/alignment_picker.jsx', type: 'text/jsx'}
 
     != js :application
     != js :sheet_view
@@ -32,6 +35,9 @@
         %a.btn{href: "/directory/#{@sheet.directory.id}/#{@sheet.directory.slug}"} Back
       #bg-color-picker
       #fg-color-picker
+      #font-size-picker
+      #alignment-picker
+
       #user-list
 
     = yield

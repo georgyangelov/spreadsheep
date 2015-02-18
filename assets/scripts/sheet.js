@@ -6,7 +6,7 @@ window.initialize_sheet = function() {
     var container = document.getElementById('table'),
         row_sizes = [],
         column_sizes = [],
-        colors = new window.HandsontablePlugins.ColorRenderer(),
+        styles = new window.HandsontablePlugins.StyleRenderer(),
         table = new Handsontable(container, {
             startRows: 100,
             startCols: 37,
@@ -23,7 +23,7 @@ window.initialize_sheet = function() {
             formulas: true,
 
             cells: function(row, col, prop) {
-                this.renderer = colors.renderer;
+                this.renderer = styles.renderer;
             }
         });
 
@@ -48,16 +48,16 @@ window.initialize_sheet = function() {
         });
     }
 
-    function set_colors_for_cells(cells) {
-        var has_color_changes = false;
+    function set_styles_for_cells(cells) {
+        var has_style_changes = false;
         _.each(cells, function(cell) {
-            if (cell.background_color || cell.foreground_color) {
-                colors.setColorData(cell.row, cell.column, cell.background_color, cell.foreground_color);
-                has_color_changes = true;
+            if (cell.background_color || cell.foreground_color || cell.font_size || cell.alignment) {
+                styles.setCellStyle(cell.row, cell.column, cell.background_color, cell.foreground_color, cell.font_size, cell.alignment);
+                has_style_changes = true;
             }
         });
 
-        if (has_color_changes) {
+        if (has_style_changes) {
             table.render();
         }
     }
@@ -96,7 +96,7 @@ window.initialize_sheet = function() {
     socket.on('message', function(message) {
         if (message.type === 'cell_changes') {
             table.setDataAtCell(cell_objects_to_array(message.changes), 'automatic');
-            set_colors_for_cells(message.changes);
+            set_styles_for_cells(message.changes);
         } else if (message.type === 'new_user') {
             var color = randomColor();
 
@@ -140,7 +140,7 @@ window.initialize_sheet = function() {
     socket.connect();
 
     // Initialize the color pickers
-    function setCellColors(background, foreground) {
+    function setCellStyles(background, foreground, fontSize, alignment) {
         var selectionRange = table.getSelectedRange();
 
         if (!selectionRange) {
@@ -149,13 +149,15 @@ window.initialize_sheet = function() {
 
         var changes = [];
         selectionRange.forAll(function(row, column) {
-            colors.setColorData(row, column, background, foreground);
+            styles.setCellStyle(row, column, background, foreground, fontSize, alignment);
 
             changes.push({
                 row: row,
                 column: column,
                 background_color: background,
-                foreground_color: foreground
+                foreground_color: foreground,
+                font_size: fontSize,
+                alignment: alignment
             });
         });
 
@@ -169,11 +171,19 @@ window.initialize_sheet = function() {
     }
 
     function setBackgroundColor(color) {
-        setCellColors(color, null);
+        setCellStyles(color, null, null, null);
     }
 
     function setForegroundColor(color) {
-        setCellColors(null, color);
+        setCellStyles(null, color, null, null);
+    }
+
+    function setFontSize(fontSize) {
+        setCellStyles(null, null, fontSize, null);
+    }
+
+    function setAlignment(alignment) {
+        setCellStyles(null, null, null, alignment);
     }
 
     var background_color_picker = React.render(
@@ -186,19 +196,31 @@ window.initialize_sheet = function() {
         document.getElementById('fg-color-picker')
     );
 
-    // Change the selected colors when the selection changes
-    table.addHook('afterSelection', function(row1, col1, row2, col2) {
-        var cellColor = colors.getColorData(row1, col1);
+    var font_size_picker = React.render(
+        React.createElement(FontSizePicker, {initialSize: 16, onChange: setFontSize}),
+        document.getElementById('font-size-picker')
+    );
 
-        background_color_picker.setSelectedColor(cellColor.bg);
-        foreground_color_picker.setSelectedColor(cellColor.fg);
+    var alignment_picker = React.render(
+        React.createElement(AlignmentPicker, {initialAlignment: 'top_left', onChange: setAlignment}),
+        document.getElementById('alignment-picker')
+    );
+
+    // Change the selected styles when the selection changes
+    table.addHook('afterSelection', function(row1, col1, row2, col2) {
+        var cellStyle = styles.getCellStyle(row1, col1);
+
+        background_color_picker.setSelectedColor(cellStyle.bg);
+        foreground_color_picker.setSelectedColor(cellStyle.fg);
+        font_size_picker.setSelectedFontSize(cellStyle.fontSize);
+        alignment_picker.setSelectedAlignment(cellStyle.alignment);
     });
 
     // Load initial data
     $.get('/sheet/' + window.state.sheet_id + '/data').then(function(data) {
         table.setDataAtCell(cell_objects_to_array(data.cells), 'automatic');
 
-        set_colors_for_cells(data.cells);
+        set_styles_for_cells(data.cells);
 
         row_sizes = data.row_sizes;
         column_sizes = data.column_sizes;

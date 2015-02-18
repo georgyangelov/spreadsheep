@@ -26,6 +26,108 @@ ul.user-list {
     }
 }
 
+.overlay-box {
+    position: absolute;
+    top: 30px;
+    left: 0px;
+
+    z-index: 1000;
+
+    box-shadow: 0 3px 5px fade(black, 30%);
+    background-color: white;
+
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    border: 4px solid #333;
+}
+
+.alignment-picker {
+    position: relative;
+    overflow: visible;
+
+    .align-icon {
+        &.top_left      { vertical-align: top;    }
+        &.top_center    { vertical-align: top;    }
+        &.top_right     { vertical-align: top;    }
+        &.middle_left   { vertical-align: middle; }
+        &.middle_center { vertical-align: middle; }
+        &.middle_right  { vertical-align: middle; }
+        &.bottom_left   { vertical-align: bottom; }
+        &.bottom_center { vertical-align: bottom; }
+        &.bottom_right  { vertical-align: bottom; }
+    }
+
+    .align-parent {
+        &.top_left      { text-align: left;   }
+        &.top_center    { text-align: center; }
+        &.top_right     { text-align: right;  }
+        &.middle_left   { text-align: left;   }
+        &.middle_center { text-align: center; }
+        &.middle_right  { text-align: right;  }
+        &.bottom_left   { text-align: left;   }
+        &.bottom_center { text-align: center; }
+        &.bottom_right  { text-align: right;  }
+    }
+
+    > button {
+        width: 30px;
+        height: 30px;
+        line-height: 24px;
+
+        padding: 2px;
+
+        .align-parent();
+    }
+
+    .alignment-box {
+        width: 90px;
+
+        .alignment {
+            float: left;
+
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+
+            cursor: pointer;
+
+            .align-parent();
+
+            &:hover {
+                background-color: fade(black, 5%);
+            }
+        }
+
+        .overlay-box();
+    }
+}
+
+.font-size-picker {
+    position: relative;
+    overflow: visible;
+
+    > button {
+        width: 40px;
+        height: 30px;
+
+        padding: 2px;
+    }
+
+    .font-size-box {
+        .font-size {
+            cursor: pointer;
+
+            &:hover {
+                background-color: fade(black, 5%);
+            }
+        }
+
+        .overlay-box();
+    }
+}
+
 .color-picker {
     position: relative;
     overflow: visible;
@@ -45,22 +147,9 @@ ul.user-list {
     }
 
     .color-box {
-        position: absolute;
-        top: 30px;
-        left: 0px;
-
-        z-index: 1000;
-
-        box-shadow: 0 3px 5px fade(black, 30%);
-        background-color: white;
-
-        margin: 0;
-        padding: 0;
-        list-style: none;
-
         width: 220px;
 
-        border: 4px solid #333;
+        .overlay-box();
 
         .color {
             float: left;

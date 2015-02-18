@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150218095321) do
+ActiveRecord::Schema.define(version: 20150218213133) do
 
   create_table "cells", force: :cascade do |t|
     t.integer "sheet_id"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 20150218095321) do
     t.string  "content"
     t.string  "background_color"
     t.string  "foreground_color"
+    t.integer "font_size"
+    t.integer "alignment"
   end
 
   add_index "cells", ["sheet_id", "row", "column"], name: "index_cells_on_sheet_id_and_row_and_column", unique: true
