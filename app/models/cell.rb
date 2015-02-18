@@ -12,7 +12,7 @@ class Cell < ActiveRecord::Base
       Cell.transaction do
         rows.times.flat_map do |row|
           values = columns.times.map do |column|
-            "(#{sheet_id}, #{row}, #{column}')"
+            "(#{sheet_id}, #{row}, #{column})"
           end.join(',')
 
           Cell.connection.execute("insert into cells (sheet_id, row, column) values #{values}")
