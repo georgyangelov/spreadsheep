@@ -11,13 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150213182145) do
+ActiveRecord::Schema.define(version: 20150218095321) do
 
   create_table "cells", force: :cascade do |t|
     t.integer "sheet_id"
-    t.integer "row",      null: false
-    t.integer "column",   null: false
+    t.integer "row",              null: false
+    t.integer "column",           null: false
     t.string  "content"
+    t.string  "background_color"
+    t.string  "foreground_color"
   end
 
   add_index "cells", ["sheet_id", "row", "column"], name: "index_cells_on_sheet_id_and_row_and_column", unique: true

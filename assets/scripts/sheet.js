@@ -6,6 +6,7 @@ window.initialize_sheet = function() {
     var container = document.getElementById('table'),
         row_sizes = [],
         column_sizes = [],
+        colors = new window.HandsontablePlugins.ColorRenderer(),
         table = new Handsontable(container, {
             startRows: 100,
             startCols: 37,
@@ -14,20 +15,27 @@ window.initialize_sheet = function() {
             minSpareRows: 1,
             colHeaders: true,
             contextMenu: false,
+            outsideClickDeselects: false,
 
             manualColumnResize: true,
             manualRowResize: true,
 
-            formulas: true
+            formulas: true,
+
+            cells: function(row, col, prop) {
+                this.renderer = colors.renderer;
+            }
         });
 
     // DEBUG
     window.table = table;
 
     function cell_objects_to_array(cells) {
-        return _.map(cells, function(cell) {
+        return _(cells).filter(function(cell) {
+            return typeof cell.content !== 'undefined';
+        }).map(function(cell) {
             return [cell.row, cell.column, cell.content];
-        });
+        }).value();
     }
 
     function cell_array_to_objects(cells) {
@@ -38,6 +46,20 @@ window.initialize_sheet = function() {
                 content: cell[3]
             };
         });
+    }
+
+    function set_colors_for_cells(cells) {
+        var has_color_changes = false;
+        _.each(cells, function(cell) {
+            if (cell.background_color || cell.foreground_color) {
+                colors.setColorData(cell.row, cell.column, cell.background_color, cell.foreground_color);
+                has_color_changes = true;
+            }
+        });
+
+        if (has_color_changes) {
+            table.render();
+        }
     }
 
     function randomColor() {
@@ -74,6 +96,7 @@ window.initialize_sheet = function() {
     socket.on('message', function(message) {
         if (message.type === 'cell_changes') {
             table.setDataAtCell(cell_objects_to_array(message.changes), 'automatic');
+            set_colors_for_cells(message.changes);
         } else if (message.type === 'new_user') {
             var color = randomColor();
 
@@ -116,9 +139,66 @@ window.initialize_sheet = function() {
 
     socket.connect();
 
+    // Initialize the color pickers
+    function setCellColors(background, foreground) {
+        var selectionRange = table.getSelectedRange();
+
+        if (!selectionRange) {
+            return;
+        }
+
+        var changes = [];
+        selectionRange.forAll(function(row, column) {
+            colors.setColorData(row, column, background, foreground);
+
+            changes.push({
+                row: row,
+                column: column,
+                background_color: background,
+                foreground_color: foreground
+            });
+        });
+
+        table.render();
+
+        // Send color changes
+        socket.send({
+            type: 'cell_changes',
+            changes: changes
+        });
+    }
+
+    function setBackgroundColor(color) {
+        setCellColors(color, null);
+    }
+
+    function setForegroundColor(color) {
+        setCellColors(null, color);
+    }
+
+    var background_color_picker = React.render(
+        React.createElement(ColorPicker, {title: 'Background color', initialColor: '#ffffff', onChange: setBackgroundColor}),
+        document.getElementById('bg-color-picker')
+    );
+
+    var foreground_color_picker = React.render(
+        React.createElement(ColorPicker, {title: 'Foreground color', initialColor: '#000000', onChange: setForegroundColor}),
+        document.getElementById('fg-color-picker')
+    );
+
+    // Change the selected colors when the selection changes
+    table.addHook('afterSelection', function(row1, col1, row2, col2) {
+        var cellColor = colors.getColorData(row1, col1);
+
+        background_color_picker.setSelectedColor(cellColor.bg);
+        foreground_color_picker.setSelectedColor(cellColor.fg);
+    });
+
     // Load initial data
     $.get('/sheet/' + window.state.sheet_id + '/data').then(function(data) {
         table.setDataAtCell(cell_objects_to_array(data.cells), 'automatic');
+
+        set_colors_for_cells(data.cells);
 
         row_sizes = data.row_sizes;
         column_sizes = data.column_sizes;

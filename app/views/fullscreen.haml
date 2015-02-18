@@ -19,6 +19,7 @@
     %script{src: '//cdnjs.cloudflare.com/ajax/libs/numeral.js/1.5.3/numeral.min.js'}
 
     %script{src: '/scripts/react_components/user_list.jsx', type: 'text/jsx'}
+    %script{src: '/scripts/react_components/color_picker.jsx', type: 'text/jsx'}
 
     != js :application
     != js :sheet_view
@@ -29,6 +30,8 @@
         = @sheet.name
       #menu
         %a.btn{href: "/directory/#{@sheet.directory.id}/#{@sheet.directory.slug}"} Back
+      #bg-color-picker
+      #fg-color-picker
       #user-list
 
     = yield

@@ -1,10 +1,10 @@
 class Cell < ActiveRecord::Base
   belongs_to :sheet, touch: true
 
-  validates_presence_of :row, :column, :content
+  validates_presence_of :row, :column
 
   def as_json(options={})
-    super(only: [:row, :column, :content])
+    super(only: [:row, :column, :content, :background_color, :foreground_color])
   end
 
   class << self
@@ -17,17 +17,19 @@ class Cell < ActiveRecord::Base
           column:   change[:column]
         }
 
-        if change[:content].nil? or change[:content] == ''
-          Cell.destroy_all(query)
-        else
-          cell = Cell.find_by(query)
+        cell = Cell.find_by(query)
 
-          if cell
-            cell.content = change[:content]
-            cell.save
-          else
-            Cell.create(query.merge(content: change[:content]))
-          end
+        if cell
+          cell.content = change[:content] if change[:content]
+          cell.background_color = change[:background_color] if change[:background_color]
+          cell.foreground_color = change[:foreground_color] if change[:foreground_color]
+          cell.save
+        else
+          Cell.create query.merge(
+            content:          change[:content],
+            background_color: change[:background_color],
+            foreground_color: change[:foreground_color]
+          )
         end
       end
     end
