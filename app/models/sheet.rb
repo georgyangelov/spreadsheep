@@ -5,7 +5,10 @@ class Sheet < ActiveRecord::Base
   validates_presence_of :name
 
   has_many :cells
-  has_many :row_column_states
+  has_many :row_column_states, dependent: :destroy
+
+  after_create :create_empty_cells
+  before_destroy :delete_cells
 
   def has_access?(user)
     self.user == user or directory.has_access? user
@@ -20,6 +23,15 @@ class Sheet < ActiveRecord::Base
   end
 
   private
+
+  def create_empty_cells
+    # TODO: You know what there is to do :)
+    Cell.create_all_empty_cells(id, 37, 100)
+  end
+
+  def delete_cells
+    Cell.delete_all(['sheet_id = ?', id])
+  end
 
   def row_column_sizes(type)
     states = row_column_states.where(type: RowColumnState.types[type])

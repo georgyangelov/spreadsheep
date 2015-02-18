@@ -15,7 +15,7 @@ class Directory < ActiveRecord::Base
            through: :user_shares,
            source: :user
 
-  has_many :sheets
+  has_many :sheets, dependent: :destroy
 
   before_create :generate_slug
   before_save   :generate_slug

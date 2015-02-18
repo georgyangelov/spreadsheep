@@ -8,28 +8,33 @@ class Cell < ActiveRecord::Base
   end
 
   class << self
+    def create_all_empty_cells(sheet_id, rows, columns)
+      Cell.transaction do
+        rows.times.flat_map do |row|
+          values = columns.times.map do |column|
+            "(#{sheet_id}, #{row}, #{column}')"
+          end.join(',')
+
+          Cell.connection.execute("insert into cells (sheet_id, row, column) values #{values}")
+        end
+      end
+    end
+
     # Changes is [{row: <row>, column: <column>, content: <content>}, ...]
     def update_cells_for_sheet(sheet_id, changes)
-      changes.each do |change|
-        query = {
-          sheet_id: sheet_id,
-          row:      change[:row],
-          column:   change[:column]
-        }
-
-        cell = Cell.find_by(query)
-
-        if cell
-          cell.content = change[:content] if change[:content]
-          cell.background_color = change[:background_color] if change[:background_color]
-          cell.foreground_color = change[:foreground_color] if change[:foreground_color]
-          cell.save
-        else
-          Cell.create query.merge(
+      Cell.transaction do
+        changes.each do |change|
+          update = {
             content:          change[:content],
             background_color: change[:background_color],
             foreground_color: change[:foreground_color]
-          )
+          }.delete_if { |_, value| value.nil? }
+
+          next if update.empty?
+
+          Cell.where(
+            'sheet_id = ? and row = ? and column = ?', sheet_id, change[:row], change[:column]
+          ).update_all(update)
         end
       end
     end

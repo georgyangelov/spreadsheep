@@ -18,6 +18,8 @@ Dir["#{__dir__}/app/validators/*.rb" ].each { |file| require_relative file }
 Dir["#{__dir__}/app/models/*.rb" ].each { |file| require_relative file }
 
 if SHOULD_RUN
+  ActiveRecord::Base.logger.level = 1
+
   use Rack::Session::Cookie, secret: 'alabala-change-me-in-production'
   use Rack::Flash, sweep: true
 
