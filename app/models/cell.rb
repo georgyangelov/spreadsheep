@@ -21,7 +21,7 @@ class Cell < ActiveRecord::Base
             "(#{sheet_id}, #{row}, #{column})"
           end.join(',')
 
-          Cell.connection.execute("insert into cells (sheet_id, row, column) values #{values}")
+          Cell.connection.execute("insert into cells (\"sheet_id\", \"row\", \"column\") values #{values}")
         end
       end
     end
@@ -41,7 +41,7 @@ class Cell < ActiveRecord::Base
           next if update.empty?
 
           Cell.where(
-            'sheet_id = ? and row = ? and column = ?', sheet_id, change[:row], change[:column]
+            '"sheet_id" = ? and "row" = ? and "column" = ?', sheet_id, change[:row], change[:column]
           ).update_all(update)
         end
       end

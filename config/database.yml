@@ -1,3 +1,17 @@
+# development:
+#   adapter: sqlite3
+#   database: db/development.sqlite3
 development:
-  adapter: sqlite3
-  database: db/development.sqlite3
+  adapter: postgresql
+  host: localhost
+  encoding: unicode
+  database: spreadsheep_production
+  username: pgsqluser
+  password: pgsqluser
+production:
+  adapter: postgresql
+  host: localhost
+  encoding: unicode
+  database: spreadsheep_production
+  username: pgsqluser
+  password: pgsqluser

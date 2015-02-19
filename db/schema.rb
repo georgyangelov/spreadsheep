@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20150219081759) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "cells", force: :cascade do |t|
     t.integer "sheet_id"
     t.integer "row",              null: false
@@ -24,8 +27,8 @@ ActiveRecord::Schema.define(version: 20150219081759) do
     t.integer "alignment"
   end
 
-  add_index "cells", ["sheet_id", "row", "column"], name: "index_cells_on_sheet_id_and_row_and_column", unique: true
-  add_index "cells", ["sheet_id"], name: "index_cells_on_sheet_id"
+  add_index "cells", ["sheet_id", "row", "column"], name: "index_cells_on_sheet_id_and_row_and_column", unique: true, using: :btree
+  add_index "cells", ["sheet_id"], name: "index_cells_on_sheet_id", using: :btree
 
   create_table "directories", force: :cascade do |t|
     t.string   "name"
@@ -36,8 +39,8 @@ ActiveRecord::Schema.define(version: 20150219081759) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "directories", ["creator_id"], name: "index_directories_on_creator_id"
-  add_index "directories", ["parent_id"], name: "index_directories_on_parent_id"
+  add_index "directories", ["creator_id"], name: "index_directories_on_creator_id", using: :btree
+  add_index "directories", ["parent_id"], name: "index_directories_on_parent_id", using: :btree
 
   create_table "row_column_states", force: :cascade do |t|
     t.integer "sheet_id"
@@ -46,14 +49,14 @@ ActiveRecord::Schema.define(version: 20150219081759) do
     t.integer "width"
   end
 
-  add_index "row_column_states", ["sheet_id", "type", "index"], name: "index_row_column_states_on_sheet_id_and_type_and_index", unique: true
+  add_index "row_column_states", ["sheet_id", "type", "index"], name: "index_row_column_states_on_sheet_id_and_type_and_index", unique: true, using: :btree
 
   create_table "sheets", force: :cascade do |t|
     t.integer  "directory_id"
-    t.string   "name"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string   "name"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.boolean  "public",       default: false
   end
 
@@ -72,6 +75,6 @@ ActiveRecord::Schema.define(version: 20150219081759) do
     t.datetime "updated_at",      null: false
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
 end

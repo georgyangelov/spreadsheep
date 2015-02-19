@@ -6,7 +6,7 @@ class CreateSheets < ActiveRecord::Migration
 
       t.string :name
 
-      t.timestamps, null: false
+      t.timestamps null: false
     end
 
     create_table :cells, id: false do |t|

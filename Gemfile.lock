@@ -218,6 +218,7 @@ GEM
     method_source (0.8.2)
     minitest (5.5.0)
     multi_json (1.10.1)
+    pg (0.18.1)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -284,6 +285,7 @@ DEPENDENCIES
   bcrypt
   haml
   less
+  pg
   pry
   rack-flash3
   rack_csrf

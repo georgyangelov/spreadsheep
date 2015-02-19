@@ -24,7 +24,11 @@ var UserList = React.createClass({
     getInitials: function(name) {
         var names = name.split(' ');
 
-        return names[0].substr(0, 1).toUpperCase() + names[1].substr(0, 1).toUpperCase();
+        if (names.length > 1) {
+            return names[0].substr(0, 1).toUpperCase() + names[1].substr(0, 1).toUpperCase();
+        } else {
+            return names[0].substr(0, 2).toUpperCase();
+        }
     },
 
     add: function(id, name, color) {

@@ -14,12 +14,15 @@ gem 'less'
 gem 'haml'
 gem 'sinatra-assetpack', :require => 'sinatra/assetpack'
 
-gem 'sqlite3'
-
 gem 'sinatra-websocket' # Yummy!
 
 group :development do
+  gem 'sqlite3'
   gem 'rerun'
   gem 'rake'
   gem 'pry'
+end
+
+group :production do
+  gem 'pg'
 end

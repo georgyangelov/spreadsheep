@@ -66,12 +66,14 @@ if SHOULD_RUN
       '/styles/selectize.css',
     ]
 
+    js :numeric, '/scripts/numeric.js', [
+      '/scripts/libs/handsontable_rulejs/numeric.js',
+    ]
     js :sheet_view, '/scripts/sheet_view.js', [
       '/scripts/libs/handsontable_full_modified.js',
       '/scripts/libs/handsontable_rulejs/lodash.js',
       '/scripts/libs/handsontable_rulejs/md5.js',
       '/scripts/libs/handsontable_rulejs/jstat.js',
-      '/scripts/libs/handsontable_rulejs/numeric.js',
       '/scripts/libs/handsontable_rulejs/formula.js',
       '/scripts/libs/handsontable_rulejs/parser.js',
       '/scripts/libs/handsontable_rulejs/ruleJS.js',
@@ -85,6 +87,8 @@ if SHOULD_RUN
     js :application, '/scripts/application.js', [
       '/scripts/helpers.js'
     ]
+
+    js_compression :simple
   end
 
   Dir["#{__dir__}/app/controllers/*.rb" ].each { |file| require_relative file }
