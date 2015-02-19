@@ -11,7 +11,7 @@ class Sheet < ActiveRecord::Base
   before_destroy :delete_cells
 
   def has_access?(user)
-    self.user == user or directory.has_access? user
+    public? or self.user == user or directory.has_access? user
   end
 
   def row_sizes

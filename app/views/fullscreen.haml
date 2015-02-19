@@ -32,7 +32,7 @@
       %h1
         = @sheet.name
       #menu
-        %a.btn{href: "/directory/#{@sheet.directory.id}/#{@sheet.directory.slug}"} Back
+        %a.btn{href: user_logged_in? ? "/directory/#{@sheet.directory.id}/#{@sheet.directory.slug}" : '/'} Back
       #bg-color-picker
       #fg-color-picker
       #font-size-picker

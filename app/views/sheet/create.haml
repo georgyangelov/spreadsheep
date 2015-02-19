@@ -8,6 +8,11 @@
   .group.input-with-icon
     %i.fa.fa-table
     %input{type: 'text', name: 'name', placeholder: 'Sheet name', required: true, value: @sheet ? @sheet.name : ''}
+  .group.input-with-icon
+    %i.fa.fa-users
+    %label.checkbox-label
+      %input{type: 'checkbox', name: 'public', checked: @sheet && @sheet.public? ? 'true' : nil}
+      Public with anonymous access
   .group.center
     %button.btn.big{type: 'submit'}
       - if @sheet

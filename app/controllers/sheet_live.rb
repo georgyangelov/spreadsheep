@@ -8,7 +8,15 @@ class SheetLive
     @channel_id = channel_id
     @socket_id = @socket.state[:socket_id]
 
-    @socket.state[:user] = current_user.as_json(only: [:id, :full_name, :email]).symbolize_keys
+    if current_user
+      @socket.state[:user] = current_user.as_json(only: [:id, :full_name, :email]).symbolize_keys
+    else
+      @socket.state[:user] = {
+        id: -1,
+        full_name: '? ?',
+        email: 'unknown'
+      }
+    end
   end
 
   def after_connect
@@ -87,7 +95,7 @@ end
 socket '/socket/sheet/:id', proc { "sheet/#{params[:id]}" } do |socket|
   sheet_id  = params[:id]
   channel_id = "sheet/#{sheet_id}"
-  socket_id = Digest::SHA1.hexdigest("#{sheet_id},#{current_user.id},#{DateTime.now},#{Random.rand}")
+  socket_id = Digest::SHA1.hexdigest("#{sheet_id},#{DateTime.now},#{Random.rand}")
 
   ensure_user_access_to Sheet.find(sheet_id)
 

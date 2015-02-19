@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150218213133) do
+ActiveRecord::Schema.define(version: 20150219081759) do
 
   create_table "cells", force: :cascade do |t|
     t.integer "sheet_id"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20150218213133) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "public",       default: false
   end
 
   create_table "user_shares", force: :cascade do |t|

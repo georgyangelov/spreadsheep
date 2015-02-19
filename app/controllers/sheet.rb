@@ -1,6 +1,4 @@
 namespace '/sheet' do
-  before { require_user_login! }
-
   get '/:id' do |id|
     @sheet = Sheet.find id
 
@@ -34,7 +32,8 @@ namespace '/sheet' do
 
     Sheet.create! user: current_user,
                   directory: @directory,
-                  name: params['name']
+                  name: params['name'],
+                  public: params['public']
 
     redirect to "/directory/#{@directory.id}/#{@directory.slug}"
   end
@@ -61,7 +60,8 @@ namespace '/sheet' do
     @sheet = Sheet.find id
     ensure_user_access_to @sheet
 
-    @sheet.name = params['name']
+    @sheet.name   = params['name']
+    @sheet.public = params['public']
     @sheet.save!
 
     redirect to "/directory/#{@sheet.directory.id}/#{@sheet.directory.slug}"
